@@ -1,34 +1,53 @@
 import React, { useState } from "react";
+
 import { AppBar, Tab, Tabs } from "@material-ui/core";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+import FlagIcon from '@material-ui/icons/Flag';
+import PublicIcon from '@material-ui/icons/Public';
+import PhotoSizeSelectSmallIcon from '@material-ui/icons/PhotoSizeSelectSmall';
 
 import './App.css';
-import { Counties, World, StatesProvinces, Countries } from "./pages";
+import { World, StatesProvinces, Countries } from "./pages";
 
 function App() {
+  // Use a dark theme
+  const theme = React.useMemo(
+    () => createMuiTheme({ palette: { type: "dark" } })
+  );
+
   // Get the current page element based on the selected tab
   let [currentTab, setTab] = useState("World");
-
-  let currentPageElm;
-  if (currentTab === "Counties") { currentPageElm = <Counties/>; }
-  else if (currentTab === "Countries") { currentPageElm = <Countries/>; }
-  else if (currentTab === "States/Provinces") { currentPageElm = <StatesProvinces/>; }
-  else if (currentTab === "World") { currentPageElm = <World/>; }
-  else { throw new Error("Shouldn't get here!") }
+  let currentPageElm = {
+    "Countries": <Countries/>,
+    "Counties/States/Provinces": <StatesProvinces/>,
+    "World": <World/>
+  }[currentTab];
+  if (!currentPageElm) {
+    throw new Error("Shouldn't get here!")
+  }
 
   return <>
-    <div className="App">
-      <AppBar position="static">
-        <Tabs value={ currentTab }
-              onChange={ (i, value, tab) => {setTab(value)} }
-              aria-label="simple tabs example">
-          <Tab value="World" label="World" />
-          <Tab value="Countries" label="Countries" />
-          <Tab value="Counties" label="Counties" />
-          <Tab value="States/Provinces" label="States/Provinces" />
-        </Tabs>
-      </AppBar>
-      { currentPageElm }
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div style={{ background: "#100b2a", height: "100vh" }}>
+        <AppBar position="static">
+          <Tabs value={ currentTab }
+                onChange={ (i, value, tab) => {setTab(value)} }
+                aria-label="select the geographic scale"
+                centered >
+            <Tab value="World"
+                 label={ <><PublicIcon />World</> } />
+            <Tab value="Countries"
+                 label={ <><FlagIcon />Countries</> } />
+            <Tab value="Counties/States/Provinces"
+                 label={ <><PhotoSizeSelectSmallIcon />Counties/States/Provinces</> } />
+          </Tabs>
+        </AppBar>
+        { currentPageElm }
+      </div>
+    </ThemeProvider>
   </>;
 }
 

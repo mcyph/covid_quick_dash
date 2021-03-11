@@ -1,7 +1,7 @@
 import { csvParse } from "d3-dsv";
 import { DataFrame } from "dataframe-js";
 
-export default DataFrame(csvParse(`Country Name,Country Code,Population
+export default new DataFrame(csvParse(`Country Name,Country Code,Population
 Aruba,ABW,106314
 Afghanistan,AFG,38041754
 Angola,AGO,31825295
@@ -266,4 +266,4 @@ Kosovo,XKX,1794248
 South Africa,ZAF,58558270
 Zambia,ZMB,17861030
 Zimbabwe,ZWE,14645468
-`));
+`), ["Country Name","Country Code","Population"]);

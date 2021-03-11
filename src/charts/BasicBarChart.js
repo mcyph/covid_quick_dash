@@ -33,8 +33,10 @@ class BasicBarChart extends Component {
     TIME: 'time'
   }
 
-  constructor({ data, xAxisType, yAxisType, stack, style }) {
-    super({ data, xAxisType, yAxisType, stack, style });
+  constructor({ data, xAxisType, yAxisType, stack,
+                xAxisLabelRotate, yAxisLabelRotate, style }) {
+    super({ data, xAxisType, yAxisType, stack,
+            xAxisLabelRotate, yAxisLabelRotate, style });
     this.state = {};
   }
 
@@ -68,11 +70,29 @@ class BasicBarChart extends Component {
         }
       },
       xAxis: {
-        type: this.props.xAxisType
+        type: this.props.xAxisType,
+        axisLabel: {
+            interval: this.props.xAxisType === BasicBarChart.AXIS_TYPE.CATEGORY ? 0 : 0,
+            rotate: this.props.xAxisLabelRotate || 0
+        },
       },
       yAxis: {
-        type: this.props.yAxisType
+        type: this.props.yAxisType,
+        axisLabel: {
+            interval: this.props.yAxisType === BasicBarChart.AXIS_TYPE.CATEGORY ? 0 : "auto",
+            rotate: this.props.yAxisLabelRotate || 0
+        },
       },
+      grid: {
+        bottom: "18%",
+      },
+      dataZoom: [
+        {
+          show: true,
+          start: 0,
+          end: 10
+        }
+      ],
       series: series,
 
       aria: {
@@ -88,7 +108,7 @@ class BasicBarChart extends Component {
         <EChartsChart
             ref={el => {this.reactEChart = el}}
             options={ options }
-
+            theme="dark"
             style={ this.props.style }
         />
       </div>

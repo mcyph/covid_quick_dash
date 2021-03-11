@@ -25,7 +25,7 @@ SOFTWARE.
 import React, { useRef, useEffect } from "react";
 import * as echarts from "echarts";
 
-function EChartsChart({ options, style }) {
+function EChartsChart({ options, theme, style }) {
     /*options['aria'] = {
         enabled: true,
         decal: {
@@ -35,7 +35,7 @@ function EChartsChart({ options, style }) {
 
     const myChart = useRef(null)
     useEffect(() => {
-        const chart = echarts.init(myChart.current)
+        const chart = echarts.init(myChart.current, theme)
         chart.setOption(options)
     }, [options]);
 

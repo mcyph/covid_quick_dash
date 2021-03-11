@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+
+.MuiTab-root {
+  text-transform: none !important;
+}

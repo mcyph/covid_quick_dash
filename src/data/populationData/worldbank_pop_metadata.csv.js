@@ -1,7 +1,7 @@
 import { csvParse } from "d3-dsv";
 import { DataFrame } from "dataframe-js";
 
-export default DataFrame(csvParse(`Country Code,Region,IncomeGroup,TableName
+export default new DataFrame(csvParse(`Country Code,Region,IncomeGroup,TableName
 ABW,Latin America & Caribbean,High income,Aruba
 AFG,South Asia,Low income,Afghanistan
 AGO,Sub-Saharan Africa,Lower middle income,Angola
@@ -265,4 +265,4 @@ YEM,Middle East & North Africa,Low income,"Yemen, Rep."
 ZAF,Sub-Saharan Africa,Upper middle income,South Africa
 ZMB,Sub-Saharan Africa,Lower middle income,Zambia
 ZWE,Sub-Saharan Africa,Lower middle income,Zimbabwe
-`));
+`), ["Country Name","Country Code","Population"]);
