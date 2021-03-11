@@ -1,5 +1,12 @@
+import * as dfd from "danfojs/src/index";
+
 import dfWorldBankPop from "./populationData/worldbank_pop.csv";
 import dfWorldBankPopMetadata from "./populationData/worldbank_pop_metadata.csv";
 
-export default dfWorldBankPop
-    .innerJoin(dfWorldBankPopMetadata, "Country Code");
+let __joined = dfd.merge({
+  "left": dfWorldBankPop,
+  "right": dfWorldBankPopMetadata,
+  "on": ["Country Code"]
+});
+
+export default __joined;

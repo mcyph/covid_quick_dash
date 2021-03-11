@@ -23,7 +23,23 @@
  */
 
 import { Component } from "react";
-import EChartsChart from "./EChartsChart";
+import React, { useRef, useEffect } from "react";
+import * as echarts from "echarts";
+
+
+function EChartsChart({ options, theme, style }) {
+    const myChart = useRef(null)
+    useEffect(() => {
+        const chart = echarts.init(myChart.current, theme)
+        chart.setOption(options)
+    }, [options]);
+
+    return (
+      <div ref={myChart}
+           style={style}
+      />
+    );
+}
 
 class BasicBarChart extends Component {
   static AXIS_TYPE = {
@@ -34,9 +50,11 @@ class BasicBarChart extends Component {
   }
 
   constructor({ data, xAxisType, yAxisType, stack,
-                xAxisLabelRotate, yAxisLabelRotate, style }) {
+                xAxisLabelRotate, yAxisLabelRotate,
+                style }) {
     super({ data, xAxisType, yAxisType, stack,
-            xAxisLabelRotate, yAxisLabelRotate, style });
+            xAxisLabelRotate, yAxisLabelRotate,
+            style });
     this.state = {};
   }
 
@@ -46,7 +64,7 @@ class BasicBarChart extends Component {
 
   render() {
     let series = [];
-    for (let [dataName, dataItem] of this.props.data) {
+    for (let [dataName, dataItem, color] of this.props.data) {
       series.push({
         name: dataName,
         type: 'bar',
@@ -54,6 +72,7 @@ class BasicBarChart extends Component {
         data: dataItem,
         symbol: 'roundRect',
         step: false,
+        color: color
       });
     }
     let options = {
@@ -84,13 +103,14 @@ class BasicBarChart extends Component {
         },
       },
       grid: {
-        bottom: "18%",
+        top: "40px",
+        bottom: "100px",
       },
       dataZoom: [
         {
           show: true,
           start: 0,
-          end: 10
+          end: 20
         }
       ],
       series: series,

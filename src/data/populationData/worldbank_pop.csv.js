@@ -1,5 +1,5 @@
 import { csvParse } from "d3-dsv";
-import { DataFrame } from "dataframe-js";
+import { DataFrame } from "danfojs/src/index";
 
 export default new DataFrame(csvParse(`Country Name,Country Code,Population
 Aruba,ABW,106314

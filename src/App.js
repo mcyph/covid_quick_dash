@@ -19,19 +19,15 @@ function App() {
 
   // Get the current page element based on the selected tab
   let [currentTab, setTab] = useState("World");
-  let currentPageElm = {
-    "Countries": <Countries/>,
-    "Counties/States/Provinces": <StatesProvinces/>,
-    "World": <World/>
-  }[currentTab];
-  if (!currentPageElm) {
-    throw new Error("Shouldn't get here!")
-  }
 
   return <>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div style={{ background: "#100b2a", height: "100vh" }}>
+      <div style={{
+        background: "#100b2a",
+        minHeight: "100vh",
+        paddingBottom: "50px"
+      }}>
         <AppBar position="static">
           <Tabs value={ currentTab }
                 onChange={ (i, value, tab) => {setTab(value)} }
@@ -45,7 +41,22 @@ function App() {
                  label={ <><PhotoSizeSelectSmallIcon />Counties/States/Provinces</> } />
           </Tabs>
         </AppBar>
-        { currentPageElm }
+        {
+          // Show only the currently selected tab
+          {
+            "Countries": <>
+              <Countries name="Confirmed" apiKey="confirmed" />
+              <Countries name="Recovered" apiKey="recovered" color="#5C5" />
+              <Countries name="Deaths" apiKey="deaths" color="orange" />
+            </>,
+            "Counties/States/Provinces": <>
+              <StatesProvinces/>
+            </>,
+            "World": <>
+              <World/>
+            </>
+          }[currentTab]
+        }
       </div>
     </ThemeProvider>
   </>;

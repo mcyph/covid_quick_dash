@@ -1,4 +1,4 @@
-import { DataFrame } from "dataframe-js";
+import * as dfd from "danfojs/src/index";
 import dfPopulationData from "./populationData";
 
 class CovidData {
@@ -8,7 +8,10 @@ class CovidData {
 
   __fromURL=async(URL)=>{
     if (!this.__cache[URL]) {
-      this.__cache[URL] = await DataFrame.fromJSON(URL);
+      this.__cache[URL] = (await dfd.read_json(URL))
+        .astype({column: "confirmed", dtype: "int32"})
+        .astype({column: "deaths", dtype: "int32"})
+        .astype({column: "recovered", dtype: "int32"});
     }
     return this.__cache[URL];
   }
@@ -20,47 +23,39 @@ class CovidData {
   getBasicStats=async()=>{
     const URL = "https://covid19.mathdro.id/api";
     let df = await this.__fromURL(URL);
-    alert(dfPopulationData.show())
-    return dfPopulationData
-        .rename("Country Code", "iso3")
-        .innerJoin(df, "iso3");
+    let mapper = { "Country Code": "iso3" };
+
+    dfd.merge({
+      "left": df,
+      "right": dfPopulationData.rename({ mapper: mapper }),
+      "on": ["iso3"]
+    });
   }
 
   /**************************************************
-   * Confirmed stats
+   * Confirmed/recovered/deaths stats
    **************************************************/
 
-  getConfirmed=async()=>{
-    const URL = "https://covid19.mathdro.id/api/confirmed";
+  getDetailedStats=async(key)=>{
+    if (["confirmed", "deaths", "recovered"].indexOf(key) === -1) {
+      throw new Error("Invalid stats key: "+key);
+    } else if (this.__cache[key]) {
+      // Use the cached version if possible
+      // as join operations are quite expensive
+      return this.__cache[key];
+    }
+
+    let URL = `https://covid19.mathdro.id/api/${key}`;
     let df = await this.__fromURL(URL);
-    let r = dfPopulationData
-        .rename("Country Code", "iso3")
-    return r
-        .innerJoin(df, "iso3");
-  }
+    let mapper = { "Country Code": "iso3" };
+    let r = dfd.merge({
+      "left": df,
+      "right": dfPopulationData.rename({ mapper: mapper }),
+      "on": ["iso3"]
+    })
 
-  /**************************************************
-   * Recovered stats
-   **************************************************/
-
-  getRecovered=async()=>{
-    const URL = "https://covid19.mathdro.id/api/recovered";
-    let df = await this.__fromURL(URL);
-    return dfPopulationData
-        .rename("Country Code", "iso3")
-        .innerJoin(df, "iso3");
-  }
-
-  /**************************************************
-   * Deaths stats
-   **************************************************/
-
-  getDeaths=async()=>{
-    const URL = "https://covid19.mathdro.id/api/deaths";
-    let df = await this.__fromURL(URL);
-    return dfPopulationData
-        .rename("Country Code", "iso3")
-        .innerJoin(df, "iso3");
+    this.__cache[key] = r;
+    return r;
   }
 
   /**************************************************
