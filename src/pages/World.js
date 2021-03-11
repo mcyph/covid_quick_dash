@@ -10,7 +10,7 @@ class World extends React.Component {
   }
 
   render() {
-
+    return <></>;
   }
 }
 

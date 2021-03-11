@@ -10,7 +10,7 @@ class Countries extends React.Component {
   }
 
   render() {
-
+    return <></>;
   }
 }
 

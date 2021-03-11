@@ -1,40 +1,35 @@
 import React, { useState } from "react";
 import { AppBar, Tab, Tabs } from "@material-ui/core";
+
 import './App.css';
+import { Counties, World, StatesProvinces, Countries } from "./pages";
 
 function App() {
-  let [setTab, currentTab] = useState()
+  // Get the current page element based on the selected tab
+  let [currentTab, setTab] = useState("World");
 
-  if (currentTab === 'Counties') {
+  let currentPageElm;
+  if (currentTab === "Counties") { currentPageElm = <Counties/>; }
+  else if (currentTab === "Countries") { currentPageElm = <Countries/>; }
+  else if (currentTab === "States/Provinces") { currentPageElm = <StatesProvinces/>; }
+  else if (currentTab === "World") { currentPageElm = <World/>; }
+  else { throw new Error("Shouldn't get here!") }
 
-  } else if (currentTab === 'Countries') {
-
-  } else if (currentTab === 'States/Provinces') {
-
-  } else if (currentTab === 'World') {
-
-  } else {
-
-  }
-
-  return (
+  return <>
     <div className="App">
-      <header className="App-header">
-        HEADER
-      </header>
-
       <AppBar position="static">
-        <Tabs value={currentTab}
-              onChange={setTab}
+        <Tabs value={ currentTab }
+              onChange={ (i, value, tab) => {setTab(value)} }
               aria-label="simple tabs example">
-          <Tab label="World" onClick={ setTab("World") } />
-          <Tab label="Countries" onClick={ setTab("Countries") } />
-          <Tab label="Counties" onClick={ setTab("Counties") } />
-          <Tab label="States/Provinces" onClick={ setTab("States/Provinces") } />
+          <Tab value="World" label="World" />
+          <Tab value="Countries" label="Countries" />
+          <Tab value="Counties" label="Counties" />
+          <Tab value="States/Provinces" label="States/Provinces" />
         </Tabs>
       </AppBar>
+      { currentPageElm }
     </div>
-  );
+  </>;
 }
 
 export default App;

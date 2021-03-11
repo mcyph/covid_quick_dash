@@ -10,7 +10,7 @@ class Counties extends React.Component {
   }
 
   render() {
-
+    return <></>;
   }
 }
 

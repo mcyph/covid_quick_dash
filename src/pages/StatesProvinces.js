@@ -10,7 +10,7 @@ class StatesProvinces extends React.Component {
   }
 
   render() {
-
+    return <></>;
   }
 }
 
