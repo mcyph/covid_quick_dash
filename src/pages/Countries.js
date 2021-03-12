@@ -123,22 +123,27 @@ class Countries extends React.Component {
             left: "90px",
             right: "30px"
           }}
-          dataZoom={ [{
-            show: true,
-            type: "slider",
-            moveHandleSize: 20,
-            moveHandleStyle: {
-              opacity: 0.3
+          dataZoom={ [
+            {
+              show: true,
+              type: "slider",
+              moveHandleSize: 20,
+              moveHandleStyle: {
+                opacity: 0.3
+              },
+              start: 0,
+              end: utilityFns.isMobile() ? 5 : 11
             },
-            start: 0,
-            end: utilityFns.isMobile() ? 5 : 13
-          }] }
+            {
+              type: "inside"
+            }
+          ] }
           style={{
             height: utilityFns.isMobile() ? "calc(66vh)" : "calc(50vh - 33px)",
             marginTop: "25px",
             marginLeft: "auto",
             marginRight: "auto",
-            maxWidth: "1100px"
+            maxWidth: "1000px"
           }}
           data={ [[this.props.name, valuesOut, this.props.color]] }
         />

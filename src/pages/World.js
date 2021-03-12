@@ -1,5 +1,4 @@
 import React from "react";
-import * as dfd from "danfojs/src/index";
 
 import CovidData from "../data/CovidData";
 import BasicBarChart from "./BasicBarChart";
@@ -84,7 +83,7 @@ class World extends React.Component {
             marginTop: "25px",
             marginLeft: "auto",
             marginRight: "auto",
-            maxWidth: "1200px"
+            maxWidth: "1000px"
           }}
           data={ [[this.props.name, valuesOut, this.props.color]] }
         />
