@@ -24,7 +24,7 @@ class Countries extends React.Component {
 
     if (!this.state.dfLoading) {
       // Load the data in the background
-      this.setState({ dfLoading: true });
+      this.setState({ "dfLoading": true });
       CovidData.getDetailedStats(apiKey).then(df => {
 
         // Set the country flag icon properties here
@@ -55,7 +55,7 @@ class Countries extends React.Component {
         )
 
         // Update the UI
-        this.setState({ df: df });
+        this.setState({ "df": df });
       });
     }
   }
@@ -80,17 +80,17 @@ class Countries extends React.Component {
                            .div(df['Population'])
         });
         df = df.drop({
-          columns: [column],
-          axis: 1
+          "columns": [column],
+          "axis": 1
         }).rename({
-          mapper: { "derived": column }
+          "mapper": { "derived": column }
         });
       }
 
       // We'll fill null/NaN's for now so we don't get errors,
       // but note this could have an effect on averages if we
       // want to show them later!
-      df = df.fillna({ values: 0 })
+      df = df.fillna({ "values": 0 })
 
       // Some countries like the US and the UK have data provided
       // by province/state but not country-wide, so we need to
@@ -102,10 +102,10 @@ class Countries extends React.Component {
              .sum();
       let mapper = {};
       mapper[column+"_sum"] = column;
-      df.rename({ mapper: mapper, inplace: true });
+      df.rename({ "mapper": mapper, "inplace": true });
 
       // Sort the values in a descending order
-      df = df.sort_values({ by: column, ascending: false })
+      df = df.sort_values({ "by": column, "ascending": false })
 
       // Convert to arrays of [[column, value], ...]
       let valuesOut = utilityFns.getTwoTuples(df, "countryRegion", column);

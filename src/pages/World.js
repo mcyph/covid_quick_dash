@@ -22,7 +22,7 @@ class World extends React.Component {
 
     if (!this.state.dfLoading) {
       // Load the data in the background
-      this.setState({ dfLoading: true });
+      this.setState({ "dfLoading": true });
 
       CovidData.getDetailedStats(apiKey).then(df => {
         // We're only interested in these properties,
@@ -49,7 +49,7 @@ class World extends React.Component {
       let column = this.props.apiKey;
       let df = this.state.df;
 
-      df = df.fillna({ values: 0 })
+      df = df.fillna({ "values": 0 })
 
       // Group by geographic region
       // e.g. "East Asia and Pacific" etc
@@ -58,10 +58,10 @@ class World extends React.Component {
              .sum();
       let mapper = {};
       mapper[column+"_sum"] = column;
-      df.rename({ mapper: mapper, inplace: true });
+      df.rename({ "mapper": mapper, "inplace": true });
 
       // Sort the values in a descending order
-      df = df.sort_values({ by: column, ascending: false })
+      df = df.sort_values({ "by": column, "ascending": false })
 
       // Convert to arrays of [[column, value], ...]
       let valuesOut = utilityFns.getTwoTuples(df, "Region", column);
