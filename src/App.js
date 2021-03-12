@@ -29,6 +29,17 @@ function App() {
         minHeight: "100vh",
         paddingBottom: "50px"
       }}>
+        <h1 style={{
+          color: "#ccc",
+          textAlign: "center",
+          paddingTop: "20px",
+          paddingBottom: "20px",
+          margin: 0
+        }}>
+          Dave Morrissey's COVID-19 Dashboard Demo
+        </h1>
+
+
         <AppBar position="static">
           <Tabs value={ currentTab }
                 onChange={ (i, value, tab) => {setTab(value)} }
@@ -42,6 +53,8 @@ function App() {
                  label={ <><PhotoSizeSelectSmallIcon />Counties/States/Provinces</> } />*/}
           </Tabs>
         </AppBar>
+
+
         {
           // Show only the currently selected tab
           {
