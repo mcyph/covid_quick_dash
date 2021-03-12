@@ -25,6 +25,7 @@ class Countries extends React.Component {
     if (!this.state.dfLoading) {
       // Load the data in the background
       this.setState({ "dfLoading": true });
+
       CovidData.getDetailedStats(apiKey).then(df => {
 
         // Set the country flag icon properties here
@@ -123,7 +124,7 @@ class Countries extends React.Component {
             left: "90px",
             right: "30px"
           }}
-          dataZoom={ [
+          dataZoom={[
             {
               show: true,
               type: "slider",
@@ -133,11 +134,10 @@ class Countries extends React.Component {
               },
               start: 0,
               end: utilityFns.isMobile() ? 5 : 11
-            },
-            {
+            }, {
               type: "inside"
             }
-          ] }
+          ]}
           style={{
             height: utilityFns.isMobile() ? "calc(66vh)" : "calc(50vh - 33px)",
             marginTop: "25px",

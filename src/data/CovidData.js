@@ -11,7 +11,8 @@ class CovidData {
       this.__cache[URL] = (await dfd.read_json(URL))
         .astype({column: "confirmed", dtype: "int32"})
         .astype({column: "deaths", dtype: "int32"})
-        .astype({column: "recovered", dtype: "int32"});
+        .astype({column: "recovered", dtype: "int32"})
+        .set_index({ key: "iso3", drop: false });
     }
     return this.__cache[URL];
   }
@@ -23,11 +24,9 @@ class CovidData {
   getBasicStats=async()=>{
     const URL = "https://covid19.mathdro.id/api";
     let df = await this.__fromURL(URL);
-    let mapper = { "Country Code": "iso3" };
-
     dfd.merge({
       "left": df,
-      "right": dfPopulationData.rename({ mapper: mapper }),
+      "right": dfPopulationData,
       "on": ["iso3"]
     });
   }
@@ -47,10 +46,9 @@ class CovidData {
 
     let URL = `https://covid19.mathdro.id/api/${key}`;
     let df = await this.__fromURL(URL);
-    let mapper = { "Country Code": "iso3" };
     let r = dfd.merge({
       "left": df,
-      "right": dfPopulationData.rename({ mapper: mapper }),
+      "right": dfPopulationData,
       "on": ["iso3"]
     })
 

@@ -266,4 +266,6 @@ Kosovo,XKX,1794248
 South Africa,ZAF,58558270
 Zambia,ZMB,17861030
 Zimbabwe,ZWE,14645468
-`), ["Country Name","Country Code","Population"]);
+`), ["Country Name","Country Code","Population"])
+    .rename({ mapper: {"Country Code": "iso3"}, axis: 1 })
+    .set_index({ key: "iso3", drop: false });

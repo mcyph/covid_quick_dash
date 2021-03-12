@@ -39,7 +39,6 @@ function App() {
           Dave Morrissey's COVID-19 Dashboard Demo
         </h1>
 
-
         <AppBar position="static">
           <Tabs value={ currentTab }
                 onChange={ (i, value, tab) => {setTab(value)} }
@@ -54,10 +53,20 @@ function App() {
           </Tabs>
         </AppBar>
 
-
         {
           // Show only the currently selected tab
           {
+            "World": <>
+                <World name="Confirmed"
+                       apiKey="confirmed"
+                       per100k={ per100k } />
+                <World name="Recovered"
+                       apiKey="recovered"
+                       color="#5C5" />
+                <World name="Deaths"
+                       apiKey="deaths"
+                       color="orange" />
+            </>,
             "Countries": <>
                 <div style={{
                   textAlign: "center",
@@ -86,19 +95,6 @@ function App() {
             "Counties/States/Provinces": <>
                 <StatesProvinces />
             </>,
-            "World": <>
-                <World name="Confirmed"
-                           apiKey="confirmed"
-                           per100k={ per100k } />
-                <World name="Recovered"
-                           apiKey="recovered"
-                           per100k={ per100k }
-                           color="#5C5" />
-                <World name="Deaths"
-                           apiKey="deaths"
-                           per100k={ per100k }
-                           color="orange" />
-            </>
           }[currentTab]
         }
       </div>

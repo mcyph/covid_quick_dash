@@ -265,4 +265,6 @@ YEM,Middle East & North Africa,Low income,"Yemen, Rep."
 ZAF,Sub-Saharan Africa,Upper middle income,South Africa
 ZMB,Sub-Saharan Africa,Lower middle income,Zambia
 ZWE,Sub-Saharan Africa,Lower middle income,Zimbabwe
-`), ["Country Name","Country Code","Population"]);
+`), ["Country Name","Country Code","Population"])
+    .rename({ mapper: {"Country Code": "iso3"}, axis: 1 })
+    .set_index({ key: "iso3", drop: false });
