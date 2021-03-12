@@ -2,9 +2,10 @@ import React from "react";
 import * as dfd from "danfojs/src/index";
 
 import CovidData from "../data/CovidData";
-import BasicBarChart from "../charts/BasicBarChart";
+import BasicBarChart from "./BasicBarChart";
 import { CircularProgress } from "@material-ui/core";
 import flagData from "../data/flagData";
+import utilityFns from "./utilityFns";
 
 class Countries extends React.Component {
   state = {}
@@ -27,8 +28,8 @@ class Countries extends React.Component {
       this.setState({ dfLoading: true });
       CovidData.getDetailedStats(apiKey).then(df => {
 
-        // Set the icon properties here so we don't
-        // have to do it each time in render()
+        // Set the country flag icon properties here
+        // so we don't have to do it each time in render()
         let richProps = this.__richProps = {};
         const REPLACE_RE = /[ '(),-]/g;
         let countryRegionValues = df['countryRegion'].values
@@ -50,13 +51,9 @@ class Countries extends React.Component {
 
         // We're only interested in some of the properties at any
         // one time, so reduce to only those to increase performance
-        let spread = {};
-        spread[this.props.apiKey] = df[this.props.apiKey].values;
-        df = new dfd.DataFrame({
-          Population: df['Population'].values,
-          countryRegion: df['countryRegion'].values,
-          ...spread
-        });
+        utilityFns.reduceToOnlyCols(
+            df, [this.props.apiKey, "Population", "countryRegion"]
+        )
 
         // Update the UI
         this.setState({ df: df });
@@ -112,11 +109,7 @@ class Countries extends React.Component {
       df = df.sort_values({ by: column, ascending: false })
 
       // Convert to arrays of [[column, value], ...]
-      let values = [df["countryRegion"].values, df[column].values];
-      let valuesOut = [];
-      for (let i=0; i<values[0].length; i++) {
-        valuesOut.push([values[0][i], values[1][i]])
-      }
+      let valuesOut = utilityFns.getTwoTuples(df, "countryRegion", column);
 
       return <>
         <BasicBarChart
@@ -125,6 +118,8 @@ class Countries extends React.Component {
           xAxisLabelRich={ this.__richProps }
           xAxisMargin={ 11 }
           yAxisType={ BasicBarChart.AXIS_TYPE.VALUE }
+          gridStyle={{ top: "40px", bottom: "200px" }}
+          dataZoom={ [{ show: true, start: 0, end: 20 }] }
           style={{ height: "calc(50vh - 33px)", marginTop: "25px" }}
           data={ [[this.props.name, valuesOut, this.props.color]] }
         />

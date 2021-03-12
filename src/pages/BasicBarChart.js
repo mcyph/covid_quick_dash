@@ -25,7 +25,6 @@
 import { Component } from "react";
 import React, { useRef, useEffect } from "react";
 import * as echarts from "echarts";
-import flagData from "../data/flagData";
 
 
 function EChartsChart({ options, theme, style }) {
@@ -54,12 +53,12 @@ class BasicBarChart extends Component {
                 xAxisLabelRotate, yAxisLabelRotate,
                 xAxisLabelRich, yAxisLabelRich,
                 xAxisMargin, yAxisMargin,
-                style }) {
+                gridStyle, dataZoom, style }) {
     super({ data, xAxisType, yAxisType, stack,
             xAxisLabelRotate, yAxisLabelRotate,
             xAxisLabelRich, yAxisLabelRich,
             xAxisMargin, yAxisMargin,
-            style });
+            gridStyle, dataZoom, style });
     this.state = {};
   }
 
@@ -81,7 +80,7 @@ class BasicBarChart extends Component {
       });
     }
 
-    const REPLACE_RE = /[ '(),-]/g;
+    const REPLACE_RE = /[ '(),&-]/g;
     let options = {
       legend: {
         textStyle: {
@@ -130,17 +129,8 @@ class BasicBarChart extends Component {
           borderWidth: "3px"
         },
       },
-      grid: {
-        top: "40px",
-        bottom: "200px",
-      },
-      dataZoom: [
-        {
-          show: true,
-          start: 0,
-          end: 20
-        }
-      ],
+      grid: this.props.gridStyle,
+      dataZoom: this.props.dataZoom,
       series: series,
 
       aria: {

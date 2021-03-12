@@ -74,7 +74,17 @@ function App() {
                 <StatesProvinces />
             </>,
             "World": <>
-                <World />
+                <World name="Confirmed"
+                           apiKey="confirmed"
+                           per100k={ per100k } />
+                <World name="Recovered"
+                           apiKey="recovered"
+                           per100k={ per100k }
+                           color="#5C5" />
+                <World name="Deaths"
+                           apiKey="deaths"
+                           per100k={ per100k }
+                           color="orange" />
             </>
           }[currentTab]
         }
