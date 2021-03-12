@@ -7,6 +7,6 @@ let __joined = dfd.merge({
   "left": dfWorldBankPop,
   "right": dfWorldBankPopMetadata,
   "on": ["Country Code"]
-});
+}).astype({column: "Population", dtype: "int32"});
 
 export default __joined;

@@ -25,6 +25,7 @@
 import { Component } from "react";
 import React, { useRef, useEffect } from "react";
 import * as echarts from "echarts";
+import flagData from "../data/flagData";
 
 
 function EChartsChart({ options, theme, style }) {
@@ -51,9 +52,13 @@ class BasicBarChart extends Component {
 
   constructor({ data, xAxisType, yAxisType, stack,
                 xAxisLabelRotate, yAxisLabelRotate,
+                xAxisLabelRich, yAxisLabelRich,
+                xAxisMargin, yAxisMargin,
                 style }) {
     super({ data, xAxisType, yAxisType, stack,
             xAxisLabelRotate, yAxisLabelRotate,
+            xAxisLabelRich, yAxisLabelRich,
+            xAxisMargin, yAxisMargin,
             style });
     this.state = {};
   }
@@ -75,9 +80,17 @@ class BasicBarChart extends Component {
         color: color
       });
     }
+
+    const REPLACE_RE = /[ '(),-]/g;
     let options = {
       legend: {
-
+        textStyle: {
+          color: "#ccc",
+          //fontWeight: "bold",
+          borderColor: "black",
+          borderWidth: "3px",
+          fontSize: 21,
+        }
       },
       tooltip: {
         trigger: 'axis',
@@ -91,20 +104,35 @@ class BasicBarChart extends Component {
       xAxis: {
         type: this.props.xAxisType,
         axisLabel: {
-            interval: this.props.xAxisType === BasicBarChart.AXIS_TYPE.CATEGORY ? 0 : 0,
-            rotate: this.props.xAxisLabelRotate || 0
+          interval: this.props.xAxisType === BasicBarChart.AXIS_TYPE.CATEGORY ? 0 : 0,
+          rotate: this.props.xAxisLabelRotate || 0,
+          formatter: function (value) {
+            return value + '   {'+value.replace(REPLACE_RE, '_')+'| }';
+          },
+          margin: this.props.xAxisMargin,
+          rich: {
+            ...(this.props.xAxisLabelRich || {})
+          },
+          color: "#ccc",
+          fontWeight: "bold",
+          borderColor: "black",
+          borderWidth: "3px"
         },
       },
       yAxis: {
         type: this.props.yAxisType,
         axisLabel: {
-            interval: this.props.yAxisType === BasicBarChart.AXIS_TYPE.CATEGORY ? 0 : "auto",
-            rotate: this.props.yAxisLabelRotate || 0
+          interval: this.props.yAxisType === BasicBarChart.AXIS_TYPE.CATEGORY ? 0 : "auto",
+          rotate: this.props.yAxisLabelRotate || 0,
+          color: "#ccc",
+          fontWeight: "bold",
+          borderColor: "black",
+          borderWidth: "3px"
         },
       },
       grid: {
         top: "40px",
-        bottom: "100px",
+        bottom: "200px",
       },
       dataZoom: [
         {

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { AppBar, Tab, Tabs } from "@material-ui/core";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { AppBar, Checkbox, FormControlLabel, Tab, Tabs } from "@material-ui/core";
 
 import FlagIcon from '@material-ui/icons/Flag';
 import PublicIcon from '@material-ui/icons/Public';
@@ -19,6 +19,7 @@ function App() {
 
   // Get the current page element based on the selected tab
   let [currentTab, setTab] = useState("World");
+  let [per100k, setPer100k] = useState(false);
 
   return <>
     <ThemeProvider theme={theme}>
@@ -32,7 +33,7 @@ function App() {
           <Tabs value={ currentTab }
                 onChange={ (i, value, tab) => {setTab(value)} }
                 aria-label="select the geographic scale"
-                centered >
+                centered>
             <Tab value="World"
                  label={ <><PublicIcon />World</> } />
             <Tab value="Countries"
@@ -45,15 +46,35 @@ function App() {
           // Show only the currently selected tab
           {
             "Countries": <>
-              <Countries name="Confirmed" apiKey="confirmed" />
-              <Countries name="Recovered" apiKey="recovered" color="#5C5" />
-              <Countries name="Deaths" apiKey="deaths" color="orange" />
+                <div style={{
+                  textAlign: "center",
+                  marginTop: "10px"
+                }}>
+                  <FormControlLabel
+                    label="Show Per 100,000 People"
+                    control={ <Checkbox checked={ per100k }
+                                        onChange={(event)=>{
+                                          setPer100k(event.target.checked);
+                                        }}
+                                        color="secondary" /> } />
+                </div>
+                <Countries name="Confirmed"
+                           apiKey="confirmed"
+                           per100k={ per100k } />
+                <Countries name="Recovered"
+                           apiKey="recovered"
+                           per100k={ per100k }
+                           color="#5C5" />
+                <Countries name="Deaths"
+                           apiKey="deaths"
+                           per100k={ per100k }
+                           color="orange" />
             </>,
             "Counties/States/Provinces": <>
-              <StatesProvinces/>
+                <StatesProvinces />
             </>,
             "World": <>
-              <World/>
+                <World />
             </>
           }[currentTab]
         }
