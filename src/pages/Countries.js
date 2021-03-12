@@ -51,7 +51,7 @@ class Countries extends React.Component {
         // We're only interested in some of the properties at any
         // one time, so reduce to only those to increase performance
         df = utilityFns.reduceToOnlyCols(
-            df, [this.props.apiKey, "Population", "countryRegion"]
+          df, [this.props.apiKey, "Population", "countryRegion"]
         )
 
         // Update the UI

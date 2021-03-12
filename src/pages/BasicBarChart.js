@@ -22,23 +22,29 @@
  SOFTWARE.
  */
 
-import { Component } from "react";
-import React, { useRef, useEffect } from "react";
+import React, { Component, useRef, useEffect } from "react";
 import * as echarts from "echarts";
 
 
-function EChartsChart({ options, theme, style }) {
-    const myChart = useRef(null)
-    useEffect(() => {
-        const chart = echarts.init(myChart.current, theme)
-        chart.setOption(options)
-    }, [options]);
+function EChartsChart({ options, theme, onResize, style }) {
+  const myChart = useRef(null);
 
-    return (
-      <div ref={myChart}
-           style={style}
-      />
-    );
+  useEffect(() => {
+    const chart = echarts.init(myChart.current, theme)
+    chart.setOption(options)
+
+    window.addEventListener('resize', event=>{
+      chart.resize();
+
+      if (onResize) {
+        return onResize(event);
+      }
+    });
+  }, [options, theme, onResize]);
+
+  return <>
+    <div ref={myChart} style={style} />
+  </>;
 }
 
 class BasicBarChart extends Component {
