@@ -75,16 +75,16 @@ class World extends React.Component {
           yAxisType={ BasicBarChart.AXIS_TYPE.VALUE }
           gridStyle={{
             top: "40px",
-            bottom: utilityFns.isMobile() ? "160px" : "40px",
+            bottom: utilityFns.isMobile() ? "180px" : "40px",
             left: "90px",
-            right: "45px"
+            right: "30px"
           }}
           style={{
             height: utilityFns.isMobile() ? "calc(66vh)" : "calc(38vh - 33px)",
             marginTop: "25px",
             marginLeft: "auto",
             marginRight: "auto",
-            maxWidth: "1100px"
+            maxWidth: "1200px"
           }}
           data={ [[this.props.name, valuesOut, this.props.color]] }
         />
