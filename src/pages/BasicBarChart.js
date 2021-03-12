@@ -116,7 +116,7 @@ class BasicBarChart extends Component {
           fontWeight: "bold",
           borderColor: "black",
           borderWidth: "3px"
-        },
+        }
       },
       yAxis: {
         type: this.props.yAxisType,

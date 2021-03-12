@@ -18,6 +18,14 @@ let fns = {
       valuesOut.push([values[0][i], values[1][i]])
     }
     return valuesOut;
+  },
+  isMobile:()=>{
+    let width = (
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth
+    );
+    return width < 800;
   }
 };
 

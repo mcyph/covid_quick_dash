@@ -117,9 +117,24 @@ class Countries extends React.Component {
           xAxisLabelRich={ this.__richProps }
           xAxisMargin={ 11 }
           yAxisType={ BasicBarChart.AXIS_TYPE.VALUE }
-          gridStyle={{ top: "40px", bottom: "200px" }}
-          dataZoom={ [{ show: true, start: 0, end: 20 }] }
-          style={{ height: "calc(50vh - 33px)", marginTop: "25px" }}
+          gridStyle={{
+            top: "40px",
+            bottom: "200px",
+            left: "90px",
+            right: "45px"
+          }}
+          dataZoom={ [{
+            show: true,
+            start: 0,
+            end: utilityFns.isMobile() ? 10 : 10
+          }] }
+          style={{
+            height: "calc(50vh - 33px)",
+            marginTop: "25px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            maxWidth: "1100px"
+          }}
           data={ [[this.props.name, valuesOut, this.props.color]] }
         />
       </>;
