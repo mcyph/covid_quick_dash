@@ -1,4 +1,6 @@
 import React from "react";
+import * as dfd from "danfojs/src/index";
+
 import CovidData from "../data/CovidData";
 import BasicBarChart from "../charts/BasicBarChart";
 import { CircularProgress } from "@material-ui/core";
@@ -20,9 +22,43 @@ class Countries extends React.Component {
   constructor({ name, apiKey, color, per100k }) {
     super({ name, apiKey, color, per100k });
 
-    if (!this.state.df) {
+    if (!this.state.dfLoading) {
       // Load the data in the background
+      this.setState({ dfLoading: true });
       CovidData.getDetailedStats(apiKey).then(df => {
+
+        // Set the icon properties here so we don't
+        // have to do it each time in render()
+        let richProps = this.__richProps = {};
+        const REPLACE_RE = /[ '(),-]/g;
+        let countryRegionValues = df['countryRegion'].values
+        let iso2Values = df['iso2'].values;
+
+        for (let x=0; x<countryRegionValues.length; x++) {
+          let countryRegion = countryRegionValues[x];
+          let iso2 = iso2Values[x];
+
+          richProps[countryRegion.replace(REPLACE_RE, '_')] = {
+            width: 24,
+            height: 24,
+            align: 'center',
+            backgroundColor: {
+              image: "data:image/png;base64," + flagData[iso2]
+            }
+          };
+        }
+
+        // We're only interested in some of the properties at any
+        // one time, so reduce to only those to increase performance
+        let spread = {};
+        spread[this.props.apiKey] = df[this.props.apiKey].values;
+        df = new dfd.DataFrame({
+          Population: df['Population'].values,
+          countryRegion: df['countryRegion'].values,
+          ...spread
+        });
+
+        // Update the UI
         this.setState({ df: df });
       });
     }
@@ -37,81 +73,56 @@ class Countries extends React.Component {
 
     } else {
       // Otherwise show the bar chart
-      let values;
       let column = this.props.apiKey;
+      let df = this.state.df;
 
       if (this.props.per100k) {
         // Show per capita values
-        values = this.state.df;
-        values.addColumn({
+        df.addColumn({
           column: "derived",
-          value: this.state.df[column].mul(100000)
-                                      .div(this.state.df['Population'])
+          value: df[column].mul(100000)
+                           .div(df['Population'])
         });
-        values = values.drop({
+        df = df.drop({
           columns: [column],
           axis: 1
         }).rename({
           mapper: { "derived": column }
         });
-      } else {
-        values = this.state.df;
       }
 
       // We'll fill null/NaN's for now so we don't get errors,
       // but note this could have an effect on averages if we
       // want to show them later!
-      values = values.fillna({ values: 0 })
+      df = df.fillna({ values: 0 })
 
       // Some countries like the US and the UK have data provided
       // by province/state but not country-wide, so we need to
       // add this data up by aggregating it
       // TODO: Add validation to make sure this isn't performed for
       //  countries which have higher-level data (if it exists)
-      values = values.groupby(["countryRegion"])
-                     .col([column])
-                     .sum();
+      df = df.groupby(["countryRegion"])
+             .col([column])
+             .sum();
       let mapper = {};
       mapper[column+"_sum"] = column;
-      values.rename({ mapper: mapper, inplace: true });
+      df.rename({ mapper: mapper, inplace: true });
 
       // Sort the values in a descending order
-      values = values.sort_values({ by: column, ascending: false })
-      //values.reset_index(true);
+      df = df.sort_values({ by: column, ascending: false })
 
       // Convert to arrays of [[column, value], ...]
-      values = [values["countryRegion"].values, values[column].values];
+      let values = [df["countryRegion"].values, df[column].values];
       let valuesOut = [];
       for (let i=0; i<values[0].length; i++) {
         valuesOut.push([values[0][i], values[1][i]])
-      }
-
-      let richProps = {};
-      if (this.state.df) {
-        const REPLACE_RE = /[ '(),-]/g;
-        let countryRegionValues = this.state.df['countryRegion'].values
-        let iso2Values = this.state.df['iso2'].values;
-
-        for (let x=0; x<countryRegionValues.length; x++) {
-          let countryRegion = countryRegionValues[x];
-          let iso2 = iso2Values[x];
-
-          richProps[countryRegion.replace(REPLACE_RE, '_')] = {
-            width: 24,
-            height: 24,
-            align: 'center',
-            backgroundColor: {
-              image: "data:image/png;base64," + flagData[iso2]
-            }
-          };
-        };
       }
 
       return <>
         <BasicBarChart
           xAxisType={ BasicBarChart.AXIS_TYPE.CATEGORY }
           xAxisLabelRotate={ 60 }
-          xAxisLabelRich={ richProps }
+          xAxisLabelRich={ this.__richProps }
           xAxisMargin={ 11 }
           yAxisType={ BasicBarChart.AXIS_TYPE.VALUE }
           style={{ height: "calc(50vh - 33px)", marginTop: "25px" }}
