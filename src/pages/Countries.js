@@ -1,5 +1,4 @@
 import React from "react";
-import * as dfd from "danfojs/src/index";
 
 import CovidData from "../data/CovidData";
 import BasicBarChart from "./BasicBarChart";

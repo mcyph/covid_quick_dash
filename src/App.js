@@ -38,8 +38,8 @@ function App() {
                  label={ <><PublicIcon />World</> } />
             <Tab value="Countries"
                  label={ <><FlagIcon />Countries</> } />
-            <Tab value="Counties/States/Provinces"
-                 label={ <><PhotoSizeSelectSmallIcon />Counties/States/Provinces</> } />
+            {/*<Tab value="Counties/States/Provinces"
+                 label={ <><PhotoSizeSelectSmallIcon />Counties/States/Provinces</> } />*/}
           </Tabs>
         </AppBar>
         {
