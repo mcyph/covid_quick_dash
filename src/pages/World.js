@@ -27,9 +27,15 @@ class World extends React.Component {
       CovidData.getDetailedStats(apiKey).then(df => {
         // We're only interested in these properties,
         // so reduce to only them to increase performance
-        utilityFns.reduceToOnlyCols(
+        df = utilityFns.reduceToOnlyCols(
             df, [this.props.apiKey, "Population", "Region"]
         )
+
+        df = df.fillna({ "values": 0 })
+
+        // Group by geographic region
+        // e.g. "East Asia and Pacific" etc
+        df = df.groupby(["Region"])
 
         // Update the UI
         this.setState({ df: df });
@@ -49,13 +55,7 @@ class World extends React.Component {
       let column = this.props.apiKey;
       let df = this.state.df;
 
-      df = df.fillna({ "values": 0 })
-
-      // Group by geographic region
-      // e.g. "East Asia and Pacific" etc
-      df = df.groupby(["Region"])
-             .col([column])
-             .sum();
+      df = df.col([column]).sum();
       let mapper = {};
       mapper[column+"_sum"] = column;
       df.rename({ "mapper": mapper, "inplace": true });
